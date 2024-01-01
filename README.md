@@ -6,14 +6,13 @@ Para el siguiente caso se realiza la importación de los datos desde el punto de
 ## Comandos útiles y que siempre debo recordar
 
 _Activar entorno virtual en Python_
-` $ source .env/bin/activate`
+`$ source .env/bin/activate`
 
 _Desactivar entorno virtual en python_
-` $ deactivate`
+`$ deactivate`
 
 _verificar rama en git
-` $ git branch`
-
+`$ git branch`
 
 ## Explorando los datos
 
@@ -159,4 +158,4 @@ Con esta operación inicial pretendo _limpiar_ la base de datos.
 
 ---
 
-> &copy; 2023 | [leoperezx](https://linkr.bio/2op3pq)
+> &copy; 2024 | [leoperezx](https://linkr.bio/2op3pq)
