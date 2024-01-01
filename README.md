@@ -1,6 +1,6 @@
 # Analisis de datos de Violencia Intrafamiliar en el Municipio de Palmira
 
-Para el siguiente caso se realiza la importación de los datos desde el punto de conexión de API:
+Para el siguiente caso, se realiza la importación de los datos desde el punto de conexión de API:
 `https://www.datos.gov.co/resource/x783-krje.csv`
 
 ## Comandos útiles y que siempre debo recordar
@@ -13,7 +13,7 @@ _verificar rama en git_ : `$ git branch`
 
 ## Explorando los datos
 
-El siguiente ejercicio es una practica para el dominio en la acción de limpiesa y manipulación de datos mediante el uso de _Python_ y su librería _Pandas_ para lo cual inicialmente imprimo los atributos (nombre de las columnas) del DataFrame.
+El siguiente ejercicio es una práctica para el dominio en la acción de limpieza y manipulación de datos mediante el uso de _Python_ y su librería _Pandas_ para lo cual inicialmente imprimo los atributos (títulos de las columnas) del DataFrame.
 
 ```text
  #   Column                          Non-Null Count  Dtype 
@@ -57,7 +57,7 @@ El siguiente ejercicio es una practica para el dominio en la acción de limpiesa
 dtypes: object(36)
 ```
 
-Alcanzo a notar que parece muy completa con pocos campos "no nulos". Esto en apariencia me parece bien, sin embargo falta explorar el contenido y ver como es exactamente la información contenida en el dataframe. Para ello imprimo sus primeras 20 filas para iniciar la exploración y ver a que me enfrento.
+Puedo notar, que inicialmente parece muy completa con pocos campos "no nulos". Esto me parece bien, sin embargo, falta explorar el contenido y ver como es exactamente la información contenida en el dataframe. Para ello imprimo sus primeras 20 filas para iniciar la exploración y ver a que me enfrento.
 
 ```text
           fecha_de_apertura dia_de_apertura  fecha_ocurrencia_hechos  ... comuna_agresor              barrio tipo_vivienda
@@ -83,15 +83,15 @@ Alcanzo a notar que parece muy completa con pocos campos "no nulos". Esto en apa
 19  2022-03-01T00:00:00.000           lunes                no aplica  ...        comuna6              fatima      familiar
 ```
 
-Noto que no hay un formato claro en las columnas que tienen fecha. La inforamción contenida en estas columnas tienen diferentes formatos pero vamos a ver mas de cerca estas columnas.
+Noto que no hay un formato claro en las columnas que tienen fecha. La inforamción contenida en estas columnas tienen diferentes formatos pero, vamos a ver más de cerca estas columnas y su información en ella.
 
-Además de ser diferentes en tamaño de caracteres, existen diferentes formatos donde las fechas están separada por guiones o fecha separada por barra inclinada, fecha y formato de hora, o solo fechas.
+Además de que el tamaño de la palabra (número de caracteres) es firente cada tanto en las filas, existen diferentes formatos donde las fechas están separada por guiones o por barra inclinada. Por otra parte hay fecha y formato de hora, o solo fechas.
 
-Pero, la información indispensable respecto a las fechas, son los **10 primeros caractéres** en ambas columnas o atributos, por lo que busco la forma de mantener solo esa información para cada una de las columnas que manejan fechas.
+Lo único constante es que la información indispensable respecto a las fechas, son los **10 primeros caractéres** en ambas columnas o atributos, por lo que busco la forma de mantener solo esa información para cada una de las columnas que manejan fechas.
 
-Realizo el filtro y escribo el resultado en un dataframe interno llamado info para explorar el resultado.
+Realizo el filtro y escribo el resultado en un dataframe interno llamado _info_ que leo de arriba a abajo para explorar el contenido de forma interna (no guardo el resultado).
 
-La información de las fechas contiene diferentes separadores para las fehas por lo que se reemplaza `"-"` y `"."` por `"/"` en toda las fechas. Sin embargo, tenemos formatos mm/dd/aa, dd/mm/aaaa y aaaa/mm/dd para lo cual se construye una función que transforma el _string_ a _objeto fecha_ utilizando la libreira _datetime_ de acuerdo a cada caso.
+La información de las fechas, contiene diferentes separadores para las fehas, por lo que se reemplazan todos los `"-"` y `"."` por `"/"` en toda las fechas. Sin embargo, queda un último detalle, tenemos formatos mm/dd/aa, dd/mm/aaaa y aaaa/mm/dd para lo cual se modifica el filtro para que la función transforme el _string_ a _objeto fecha_ utilizando la libreira _datetime_ de acuerdo a cada caso.
 
 El antes y después se muestra a continuación:
 
@@ -147,11 +147,11 @@ El antes y después se muestra a continuación:
 19        2022-03-01           lunes               no aplica      no aplica  ...               ninguno        comuna6              fatima      familiar
 ```
 
-Hay que notar que toda las fechas están separadas por guiones `"-"` y que solo contienen fechas. No contienen formato de horas. Se conservan las etiquetas _"no aplica"_ para cada entrada.
+Hay que notar que toda las fechas están separadas por guiones `"-"` y que solo contienen fechas. Este es el resultado de transformar todas las fechas a _'obejtos fecha'_. Se programo el filtro para que la fecha no añada el formato de hora. Se conservan las etiquetas _"no aplica"_ para cada entrada que contenga el mismo mensaje.
 
-Con esta configuración doy por terminada la preaparación de los datos de fecha incluidos en los atributos **"fecha_de_apertura"** y  **"fecha_ocurrencia_hechos"**.
+Con esta configuración doy por terminada la preparación de los datos de fecha incluidos en los atributos **"fecha_de_apertura"** y  **"fecha_ocurrencia_hechos"**.
 
-Con esta operación inicial pretendo _limpiar_ la base de datos.
+Con esta operación inicial, pretendo _limpiar_ la base de datos para una mejor manipulación de los datos. La siguiente fase es realizar algunas preguntas de interés propio las cuales pretendo resolver mendiante la manipulación y gráficas utilizando las librerías de _Dash_ en _Python_.
 
 ---
 
