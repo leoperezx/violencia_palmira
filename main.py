@@ -3,13 +3,17 @@ import add.funciones as fn
 
 
 if __name__ == '__main__':
-    #importar información desde la pagina www.datos.gov.co
+    # Importar información desde la pagina www.datos.gov.co
     data = fn.importar_data()
+    
+    # Selecciona los atributos que contienen información con fechas 
     atributos_con_fecha = ["fecha_de_apertura","fecha_ocurrencia_hechos"]
     
+    # Realiza una corte de cada una de las entradas en los atributos 
+    # de interés para iniciar a dar formato.
     df = fn.dar_formato_a_info(data, atributos_con_fecha)
-    
-    #df = fn.convertir_a_objeto_fecha(df,atributos_con_fecha[0])
+        
+    #convierte cada entrada en las columnas de string a obejtos fecha
     for item in atributos_con_fecha:
         df[item]=df[item].apply(lambda x: fn.convertir_a_fecha(x))
     

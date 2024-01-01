@@ -36,6 +36,19 @@ def dar_formato_a_info(data, lista):
     return info
 
 def convertir_a_fecha(valor):
+    '''
+    Realiza una transformación de 'string' a 'objeto fecha' pasando uno por uno 
+    de los campos (filas) de los atributos (columnas) que tiene información con
+    fechas, teneindo en cuenta que exites varios formatos
+    - '2022/' : año de 4 cifras al inicio
+    - '/2022' : año de 4 cifras al final
+    - '/22' : año de 2 cifras al final
+    - '/21' : año de 2 cifras al final
+    - '/20' : año de 2 cifras al final
+    
+    La función realiza el filtro para cada caso y transforma a 'objeto fecha'.
+     
+    '''
     
     if  len(valor)==10 and valor[:5] == "2022/":
         

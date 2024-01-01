@@ -3,6 +3,18 @@
 Para el siguiente caso se realiza la importación de los datos desde el punto de conexión de API:
 `https://www.datos.gov.co/resource/x783-krje.csv`
 
+## Comandos útiles y que siempre debo recordar
+
+_Activar entorno virtual en Python_
+` $ source .env/bin/activate`
+
+_Desactivar entorno virtual en python_
+` $ deactivate`
+
+_verificar rama en git
+` $ git branch`
+
+
 ## Explorando los datos
 
 El siguiente ejercicio es una practica para el dominio en la acción de limpiesa y manipulación de datos mediante el uso de _Python_ y su librería _Pandas_ para lo cual inicialmente imprimo los atributos (nombre de las columnas) del DataFrame.
@@ -81,16 +93,70 @@ Además de ser diferentes en tamaño de caracteres, existen diferentes formatos 
 
 Pero, la información indispensable respecto a las fechas, son los **10 primeros caractéres** en ambas columnas o atributos, por lo que busco la forma de mantener solo esa información para cada una de las columnas que manejan fechas.
 
-Realizo el filtro y escribo el resultado en un dataframe llamado info. Exploro el resultado desde VScode.
+Realizo el filtro y escribo el resultado en un dataframe interno llamado info para explorar el resultado.
 
-![Resultado de filtrar la data](/add/csv_file.JPG)
+La información de las fechas contiene diferentes separadores para las fehas por lo que se reemplaza `"-"` y `"."` por `"/"` en toda las fechas. Sin embargo, tenemos formatos mm/dd/aa, dd/mm/aaaa y aaaa/mm/dd para lo cual se construye una función que transforma el _string_ a _objeto fecha_ utilizando la libreira _datetime_ de acuerdo a cada caso.
 
-Se reemplaza `"-"` y `"."` por `"/"` en toda las fechas. Sin embargo, tenemos formatos mm/dd/aa, dd/mm/aaaa y aaaa/mm/dd para lo cual se construye una función que transforma el _string_ a _objeto fecha_ utilizando la libreira _datetime_ de acuerdo a cada caso.
+El antes y después se muestra a continuación:
 
-El resultado se muestra a continuación.
+**Antes:**
 
-![Resultado de dar formato y poner como "datetime object" la información contenida en las columnas que contienen fechas](/add/csv_file_01.JPG)
+```text
+   fecha_de_apertura dia_de_apertura fecha_ocurrencia_hechos dia_ocurrencia  ... corregimiento_agresor comuna_agresor              barrio tipo_vivienda
+0         2022/06/01          jueves              29/12/2021      miércoles  ...             juanchito       comuna10                  no      familiar
+1         2022/07/01         viernes              2022/07/01        viernes  ...               ninguno        comuna5           san pedro     alquilada
+2         2022/11/01          martes              2022/06/01      miércoles  ...               ninguno        comuna1                  no     alquilada
+3         13/01/2022          jueves              13/01/2022         jueves  ...               ninguno        comuna1                  no      familiar
+4         19/01/2022       miércoles              2022/12/01      miércoles  ...               ninguno        comuna4        san cayetano      familiar
+5         19/01/2022       miércoles              18/01/2022         martes  ...               ninguno        comuna3           la emilia     alquilada
+6         21/01/2022         viernes              2022/09/01        domingo  ...               ninguno        comuna3           la emilia     alquilada
+7         21/01/2022         viernes              2022/04/01         martes  ...               ninguno        comuna3        el triángulo      familiar
+8         24/01/2022           lunes              19/01/2022      miércoles  ...               ninguno        comuna1            zamorano     alquilada
+9         25/01/2022          martes              25/01/2022         martes  ...                boyaca       comuna12                  no      familiar
+10        26/01/2022       miércoles              26/01/2022      miércoles  ...               ninguno        comuna6        la colombina      familiar
+11        27/01/2022          jueves              27/01/2022         jueves  ...               ninguno        comuna6             pradera      familiar
+12        26/01/2022       miércoles              25/01/2022         martes  ...               ninguno        comuna2  alameda palo verde     alquilada
+13        28/01/2022         viernes              23/12/2022        viernes  ...               ninguno        comuna5     primero de mayo      familiar
+14        29/01/2022          sábado              29/01/2022         sábado  ...               ninguno        comuna1     urb. los mangos      familiar
+15        31/01/2022           lunes              31/12/2022         sábado  ...               ninguno        comuna5     siete de agosto     alquilada
+16        2022/02/01         domingo               no aplica      no aplica  ...               ninguno        comuna1           no aplica        propia
+17        2022/03/01           lunes               no aplica      no aplica  ...                 tenjo       comuna16           no aplica     no aplica
+18        2022/03/01           lunes               no aplica      no aplica  ...               ninguno        comuna1           carbonera     alquilada
+19        2022/03/01           lunes               no aplica      no aplica  ...               ninguno        comuna6              fatima      familiar
+```
+
+**Después:**
+
+```text
+   fecha_de_apertura dia_de_apertura fecha_ocurrencia_hechos dia_ocurrencia  ... corregimiento_agresor comuna_agresor              barrio tipo_vivienda
+0         2022-06-01          jueves               no aplica      miércoles  ...             juanchito       comuna10                  no      familiar
+1         2022-07-01         viernes              2022-07-01        viernes  ...               ninguno        comuna5           san pedro     alquilada
+2         2022-11-01          martes              2022-06-01      miércoles  ...               ninguno        comuna1                  no     alquilada
+3         2022-01-13          jueves              2022-01-13         jueves  ...               ninguno        comuna1                  no      familiar
+4         2022-01-19       miércoles              2022-12-01      miércoles  ...               ninguno        comuna4        san cayetano      familiar
+5         2022-01-19       miércoles              2022-01-18         martes  ...               ninguno        comuna3           la emilia     alquilada
+6         2022-01-21         viernes              2022-09-01        domingo  ...               ninguno        comuna3           la emilia     alquilada
+7         2022-01-21         viernes              2022-04-01         martes  ...               ninguno        comuna3        el triángulo      familiar
+8         2022-01-24           lunes              2022-01-19      miércoles  ...               ninguno        comuna1            zamorano     alquilada
+9         2022-01-25          martes              2022-01-25         martes  ...                boyaca       comuna12                  no      familiar
+10        2022-01-26       miércoles              2022-01-26      miércoles  ...               ninguno        comuna6        la colombina      familiar
+11        2022-01-27          jueves              2022-01-27         jueves  ...               ninguno        comuna6             pradera      familiar
+12        2022-01-26       miércoles              2022-01-25         martes  ...               ninguno        comuna2  alameda palo verde     alquilada
+13        2022-01-28         viernes              2022-12-23        viernes  ...               ninguno        comuna5     primero de mayo      familiar
+14        2022-01-29          sábado              2022-01-29         sábado  ...               ninguno        comuna1     urb. los mangos      familiar
+15        2022-01-31           lunes              2022-12-31         sábado  ...               ninguno        comuna5     siete de agosto     alquilada
+16        2022-02-01         domingo               no aplica      no aplica  ...               ninguno        comuna1           no aplica        propia
+17        2022-03-01           lunes               no aplica      no aplica  ...                 tenjo       comuna16           no aplica     no aplica
+18        2022-03-01           lunes               no aplica      no aplica  ...               ninguno        comuna1           carbonera     alquilada
+19        2022-03-01           lunes               no aplica      no aplica  ...               ninguno        comuna6              fatima      familiar
+```
 
 Hay que notar que toda las fechas están separadas por guiones `"-"` y que solo contienen fechas. No contienen formato de horas. Se conservan las etiquetas _"no aplica"_ para cada entrada.
 
 Con esta configuración doy por terminada la preaparación de los datos de fecha incluidos en los atributos **"fecha_de_apertura"** y  **"fecha_ocurrencia_hechos"**.
+
+Con esta operación inicial pretendo _limpiar_ la base de datos.
+
+---
+
+> &copy; 2023 | [leoperezx](https://linkr.bio/2op3pq)
