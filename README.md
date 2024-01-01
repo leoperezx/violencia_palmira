@@ -5,14 +5,11 @@ Para el siguiente caso se realiza la importación de los datos desde el punto de
 
 ## Comandos útiles y que siempre debo recordar
 
-_Activar entorno virtual en Python_
-`$ source .env/bin/activate`
+_Activar entorno virtual en Python_ : `$ source .env/bin/activate`
 
-_Desactivar entorno virtual en python_
-`$ deactivate`
+_Desactivar entorno virtual en python_ : `$ deactivate`
 
-_verificar rama en git
-`$ git branch`
+_verificar rama en git_ : `$ git branch`
 
 ## Explorando los datos
 
