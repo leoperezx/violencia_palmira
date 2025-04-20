@@ -1,158 +1,62 @@
-# Analisis de datos de Violencia Intrafamiliar en el Municipio de Palmira
+# Análisis de Reportes de Violencia Familiar en Palmira
 
-Para el siguiente caso, se realiza la importación de los datos desde el punto de conexión de API:
-`https://www.datos.gov.co/resource/x783-krje.csv`
+Este proyecto tiene como objetivo analizar una base de datos de reportes de violencia familiar en el municipio de Palmira, Valle del Cauca, utilizando Python y las librerías Pandas, Plotly Express y Streamlit.
 
-## Comandos útiles y que siempre debo recordar
+## Estado Actual del Proyecto
 
-_Activar entorno virtual en Python_ : `$ source .env/bin/activate`
+Actualmente, el proyecto ha avanzado en las siguientes etapas:
 
-_Desactivar entorno virtual en python_ : `$ deactivate`
+1. **Carga de Datos:**
+    * Se ha implementado una clase `DataLoader` en el archivo `data_loader.py` para cargar datos desde un archivo CSV.
+    * Se ha integrado una opción en la aplicación Streamlit (a través de la clase `APIConnector` en `api_connector.py`) para cargar datos directamente desde la API de Datos Abiertos de Colombia (enlace a la API: [https://www.datos.gov.co/api/odata/v4/x783-krje](https://www.datos.gov.co/api/odata/v4/x783-krje)). Los datos descargados de la API se guardan localmente como un archivo CSV.
 
-_verificar rama en git_ : `$ git branch`
+2. **Exploración Inicial de los Datos:**
+    * En la página principal de la aplicación Streamlit (`main.py`), se muestra información básica del DataFrame cargado, incluyendo las primeras filas, información general, estadísticas descriptivas y la cantidad de valores únicos por columna.
+    * Se incluye la visualización de información sobre el conjunto de datos desde un archivo `data_description.md`.
 
-## Explorando los datos
+3. **Limpieza y Preprocesamiento de Datos:**
+    * Se han añadido funciones a la clase `DataLoader` para realizar tareas de limpieza y preprocesamiento:
+        * Conversión de columnas a tipo datetime.
+        * Extracción de características de fecha (año, mes, día de la semana) para la columna 'fecha\_de\_apertura'.
+        * Conversión de la columna 'hora\_militar\_ocurrencia\_hechos' a tipo numérico.
+        * Verificación y manejo de valores faltantes (se muestra la cantidad por columna y se incluye un ejemplo de cómo llenarlos o eliminarlos).
+        * Verificación y eliminación de filas duplicadas.
+        * Eliminación de columnas con una alta cantidad de valores faltantes ('hora\_militar\_ocurrencia\_hechos', 'fecha\_ocurrencia\_hechos\_año', 'fecha\_ocurrencia\_hechos\_mes', 'fecha\_ocurrencia\_hechos\_dia\_semana'). Se mantiene la columna 'fecha\_ocurrencia\_hechos' a pesar de tener faltantes.
 
-El siguiente ejercicio es una práctica para el dominio en la acción de limpieza y manipulación de datos mediante el uso de _Python_ y su librería _Pandas_ para lo cual inicialmente imprimo los atributos (títulos de las columnas) del DataFrame.
+## Estructura del Proyecto
 
-```text
- #   Column                          Non-Null Count  Dtype 
----  ------                          --------------  ----- 
- 0   fecha_de_apertura               1000 non-null   object
- 1   dia_de_apertura                 1000 non-null   object
- 2   fecha_ocurrencia_hechos         1000 non-null   object
- 3   dia_ocurrencia                  1000 non-null   object
- 4   hora_militar_ocurrencia_hechos  1000 non-null   object
- 5   conforman_unidad_domestica      1000 non-null   object
- 6   fisica                          1000 non-null   object
- 7   verbal                          1000 non-null   object
- 8   economica                       1000 non-null   object
- 9   psicologica                     1000 non-null   object
- 10  sexual                          1000 non-null   object
- 11  genero_m_f_victima              1000 non-null   object
- 12  edad_victima                    999 non-null    object
- 13  victima_conflicto_armado        1000 non-null   object
- 14  etnia_victima                   1000 non-null   object
- 15  estado_civil_victima            1000 non-null   object
- 16  escolaridad_victima             1000 non-null   object
- 17  corregimiento_victima           998 non-null    object
- 18  comuna_de_la_victima            1000 non-null   object
- 19  barrio_victima                  1000 non-null   object
- 20  ocupacion_victima               1000 non-null   object
- 21  no_hijos_victima                1000 non-null   object
- 22  vivienda_victima                1000 non-null   object
- 23  nucleo_familiar_victima         1000 non-null   object
- 24  numero_hermanos_victima         1000 non-null   object
- 25  genero_agresor_m_f              1000 non-null   object
- 26  parentesco_frente_a_la_victima  1000 non-null   object
- 27  no_de_hijos_agresor             1000 non-null   object
- 28  edad_agresor                    1000 non-null   object
- 29  estado_civil_agresor            1000 non-null   object
- 30  escolaridad_agresor             1000 non-null   object
- 31  ocupacion_agresor               1000 non-null   object
- 32  corregimiento_agresor           1000 non-null   object
- 33  comuna_agresor                  1000 non-null   object
- 34  barrio                          1000 non-null   object
- 35  tipo_vivienda                   1000 non-null   object
-dtypes: object(36)
-```
+El proyecto se organiza en los siguientes archivos y carpetas:
 
-Puedo notar, que inicialmente parece muy completa con pocos campos "no nulos". Esto me parece bien, sin embargo, falta explorar el contenido y ver como es exactamente la información contenida en el dataframe. Para ello imprimo sus primeras 20 filas para iniciar la exploración y ver a que me enfrento.
+violencia_familiar_analisis/
+├── main.py           # Archivo principal para ejecutar la aplicación Streamlit
+├── data_loader.py    # Contiene la clase DataLoader para cargar y preprocesar datos
+├── api_connector.py  # Contiene la clase APIConnector para obtener datos de la API
+├── visualizations.py # (En desarrollo) Contendrá funciones para crear visualizaciones con Plotly Express
+├── utils.py          # (Opcional) Podría contener funciones utilitarias
+├── data/             # Carpeta para almacenar el archivo de datos (dataFrame.csv o el descargado de la API)
+└── README.md         # Este archivo
 
-```text
-          fecha_de_apertura dia_de_apertura  fecha_ocurrencia_hechos  ... comuna_agresor              barrio tipo_vivienda
-0   2022-06-01T00:00:00.000          jueves               29/12/2021  ...       comuna10                  no      familiar
-1   2022-07-01T00:00:00.000         viernes  2022-07-01T00:00:00.000  ...        comuna5           san pedro     alquilada
-2   2022-11-01T00:00:00.000          martes  2022-06-01T00:00:00.000  ...        comuna1                  no     alquilada
-3                13/01/2022          jueves               13/01/2022  ...        comuna1                  no      familiar
-4                19/01/2022       miércoles  2022-12-01T00:00:00.000  ...        comuna4        san cayetano      familiar
-5                19/01/2022       miércoles               18/01/2022  ...        comuna3           la emilia     alquilada
-6                21/01/2022         viernes  2022-09-01T00:00:00.000  ...        comuna3           la emilia     alquilada
-7                21/01/2022         viernes  2022-04-01T00:00:00.000  ...        comuna3        el triángulo      familiar
-8                24/01/2022           lunes               19/01/2022  ...        comuna1            zamorano     alquilada
-9                25/01/2022          martes               25/01/2022  ...       comuna12                  no      familiar
-10               26/01/2022       miércoles               26/01/2022  ...        comuna6        la colombina      familiar
-11               27/01/2022          jueves               27/01/2022  ...        comuna6             pradera      familiar
-12               26/01/2022       miércoles               25/01/2022  ...        comuna2  alameda palo verde     alquilada
-13               28/01/2022         viernes               23/12/2022  ...        comuna5     primero de mayo      familiar
-14               29/01/2022          sábado               29/01/2022  ...        comuna1     urb. los mangos      familiar
-15               31/01/2022           lunes               31/12/2022  ...        comuna5     siete de agosto     alquilada
-16  2022-02-01T00:00:00.000         domingo                no aplica  ...        comuna1           no aplica        propia
-17  2022-03-01T00:00:00.000           lunes                no aplica  ...       comuna16           no aplica     no aplica
-18  2022-03-01T00:00:00.000           lunes                no aplica  ...        comuna1           carbonera     alquilada
-19  2022-03-01T00:00:00.000           lunes                no aplica  ...        comuna6              fatima      familiar
-```
+## Próximos Pasos
 
-Noto que no hay un formato claro en las columnas que tienen fecha. La inforamción contenida en estas columnas tienen diferentes formatos pero, vamos a ver más de cerca estas columnas y su información en ella.
+Los siguientes pasos planeados para el proyecto son:
 
-Además de que el tamaño de la palabra (número de caracteres) es firente cada tanto en las filas, existen diferentes formatos donde las fechas están separada por guiones o por barra inclinada. Por otra parte hay fecha y formato de hora, o solo fechas.
+* Crear el archivo `visualizations.py` y desarrollar visualizaciones exploratorias utilizando Plotly Express para entender patrones en los datos (por ejemplo, distribución de tipos de violencia, tendencias temporales, características de las víctimas y agresores).
+* Integrar estas visualizaciones en la aplicación Streamlit para hacerla interactiva.
+* Continuar con el preprocesamiento de datos según sea necesario para el análisis.
+* Potencialmente, explorar la creación de dashboards o análisis más profundos basados en las visualizaciones.
 
-Lo único constante es que la información indispensable respecto a las fechas, son los **10 primeros caractéres** en ambas columnas o atributos, por lo que busco la forma de mantener solo esa información para cada una de las columnas que manejan fechas.
+## Cómo Ejecutar la Aplicación
 
-Realizo el filtro y escribo el resultado en un dataframe interno llamado _info_ que leo de arriba a abajo para explorar el contenido de forma interna (no guardo el resultado).
+1. Asegúrate de tener Python instalado en tu sistema.
+2. Instala las librerías necesarias:
 
-La información de las fechas, contiene diferentes separadores para las fehas, por lo que se reemplazan todos los `"-"` y `"."` por `"/"` en toda las fechas. Sin embargo, queda un último detalle, tenemos formatos mm/dd/aa, dd/mm/aaaa y aaaa/mm/dd para lo cual se modifica el filtro para que la función transforme el _string_ a _objeto fecha_ utilizando la libreira _datetime_ de acuerdo a cada caso.
+    ```bash
+    pip install pandas streamlit requests plotly-express
+    ```
 
-El antes y después se muestra a continuación:
+3. Navega al directorio raíz del proyecto (`violencia_familiar_analisis/`) en tu terminal.
+4. Ejecuta la aplicación Streamlit:
 
-**Antes:**
-
-```text
-   fecha_de_apertura dia_de_apertura fecha_ocurrencia_hechos dia_ocurrencia  ... corregimiento_agresor comuna_agresor              barrio tipo_vivienda
-0         2022/06/01          jueves              29/12/2021      miércoles  ...             juanchito       comuna10                  no      familiar
-1         2022/07/01         viernes              2022/07/01        viernes  ...               ninguno        comuna5           san pedro     alquilada
-2         2022/11/01          martes              2022/06/01      miércoles  ...               ninguno        comuna1                  no     alquilada
-3         13/01/2022          jueves              13/01/2022         jueves  ...               ninguno        comuna1                  no      familiar
-4         19/01/2022       miércoles              2022/12/01      miércoles  ...               ninguno        comuna4        san cayetano      familiar
-5         19/01/2022       miércoles              18/01/2022         martes  ...               ninguno        comuna3           la emilia     alquilada
-6         21/01/2022         viernes              2022/09/01        domingo  ...               ninguno        comuna3           la emilia     alquilada
-7         21/01/2022         viernes              2022/04/01         martes  ...               ninguno        comuna3        el triángulo      familiar
-8         24/01/2022           lunes              19/01/2022      miércoles  ...               ninguno        comuna1            zamorano     alquilada
-9         25/01/2022          martes              25/01/2022         martes  ...                boyaca       comuna12                  no      familiar
-10        26/01/2022       miércoles              26/01/2022      miércoles  ...               ninguno        comuna6        la colombina      familiar
-11        27/01/2022          jueves              27/01/2022         jueves  ...               ninguno        comuna6             pradera      familiar
-12        26/01/2022       miércoles              25/01/2022         martes  ...               ninguno        comuna2  alameda palo verde     alquilada
-13        28/01/2022         viernes              23/12/2022        viernes  ...               ninguno        comuna5     primero de mayo      familiar
-14        29/01/2022          sábado              29/01/2022         sábado  ...               ninguno        comuna1     urb. los mangos      familiar
-15        31/01/2022           lunes              31/12/2022         sábado  ...               ninguno        comuna5     siete de agosto     alquilada
-16        2022/02/01         domingo               no aplica      no aplica  ...               ninguno        comuna1           no aplica        propia
-17        2022/03/01           lunes               no aplica      no aplica  ...                 tenjo       comuna16           no aplica     no aplica
-18        2022/03/01           lunes               no aplica      no aplica  ...               ninguno        comuna1           carbonera     alquilada
-19        2022/03/01           lunes               no aplica      no aplica  ...               ninguno        comuna6              fatima      familiar
-```
-
-**Después:**
-
-```text
-   fecha_de_apertura dia_de_apertura fecha_ocurrencia_hechos dia_ocurrencia  ... corregimiento_agresor comuna_agresor              barrio tipo_vivienda
-0         2022-06-01          jueves               no aplica      miércoles  ...             juanchito       comuna10                  no      familiar
-1         2022-07-01         viernes              2022-07-01        viernes  ...               ninguno        comuna5           san pedro     alquilada
-2         2022-11-01          martes              2022-06-01      miércoles  ...               ninguno        comuna1                  no     alquilada
-3         2022-01-13          jueves              2022-01-13         jueves  ...               ninguno        comuna1                  no      familiar
-4         2022-01-19       miércoles              2022-12-01      miércoles  ...               ninguno        comuna4        san cayetano      familiar
-5         2022-01-19       miércoles              2022-01-18         martes  ...               ninguno        comuna3           la emilia     alquilada
-6         2022-01-21         viernes              2022-09-01        domingo  ...               ninguno        comuna3           la emilia     alquilada
-7         2022-01-21         viernes              2022-04-01         martes  ...               ninguno        comuna3        el triángulo      familiar
-8         2022-01-24           lunes              2022-01-19      miércoles  ...               ninguno        comuna1            zamorano     alquilada
-9         2022-01-25          martes              2022-01-25         martes  ...                boyaca       comuna12                  no      familiar
-10        2022-01-26       miércoles              2022-01-26      miércoles  ...               ninguno        comuna6        la colombina      familiar
-11        2022-01-27          jueves              2022-01-27         jueves  ...               ninguno        comuna6             pradera      familiar
-12        2022-01-26       miércoles              2022-01-25         martes  ...               ninguno        comuna2  alameda palo verde     alquilada
-13        2022-01-28         viernes              2022-12-23        viernes  ...               ninguno        comuna5     primero de mayo      familiar
-14        2022-01-29          sábado              2022-01-29         sábado  ...               ninguno        comuna1     urb. los mangos      familiar
-15        2022-01-31           lunes              2022-12-31         sábado  ...               ninguno        comuna5     siete de agosto     alquilada
-16        2022-02-01         domingo               no aplica      no aplica  ...               ninguno        comuna1           no aplica        propia
-17        2022-03-01           lunes               no aplica      no aplica  ...                 tenjo       comuna16           no aplica     no aplica
-18        2022-03-01           lunes               no aplica      no aplica  ...               ninguno        comuna1           carbonera     alquilada
-19        2022-03-01           lunes               no aplica      no aplica  ...               ninguno        comuna6              fatima      familiar
-```
-
-Hay que notar que toda las fechas están separadas por guiones `"-"` y que solo contienen fechas. Este es el resultado de transformar todas las fechas a _'obejtos fecha'_. Se programo el filtro para que la fecha no añada el formato de hora. Se conservan las etiquetas _"no aplica"_ para cada entrada que contenga el mismo mensaje.
-
-Con esta configuración doy por terminada la preparación de los datos de fecha incluidos en los atributos **"fecha_de_apertura"** y  **"fecha_ocurrencia_hechos"**.
-
-Con esta operación inicial, pretendo _limpiar_ la base de datos para una mejor manipulación de los datos. La siguiente fase es realizar algunas preguntas de interés propio las cuales pretendo resolver mendiante la manipulación y gráficas utilizando las librerías de _Dash_ en _Python_.
-
----
-
-> &copy; 2024 | [leoperezx](https://linkr.bio/2op3pq)
+    ```bash
+    streamlit run main.py
+    ```
