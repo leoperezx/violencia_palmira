@@ -33,8 +33,10 @@ violencia_familiar_analisis/
 ├── data_loader.py    # Contiene la clase DataLoader para cargar y preprocesar datos
 ├── api_connector.py  # Contiene la clase APIConnector para obtener datos de la API
 ├── visualizations.py # (En desarrollo) Contendrá funciones para crear visualizaciones con Plotly Express
-├── utils.py          # (Opcional) Podría contener funciones utilitarias
 ├── data/             # Carpeta para almacenar el archivo de datos (dataFrame.csv o el descargado de la API)
+│   ├── data_description.md
+│   ├── dataFrame_violencia.csv
+│   └── violencia_familiar_api.csv
 └── README.md         # Este archivo
 ```
 
