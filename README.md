@@ -25,6 +25,7 @@ Actualmente, el proyecto ha avanzado en las siguientes etapas:
 
 ## Estructura del Proyecto
 
+```Text
 El proyecto se organiza en los siguientes archivos y carpetas:
 
 violencia_familiar_analisis/
@@ -35,6 +36,7 @@ violencia_familiar_analisis/
 ├── utils.py          # (Opcional) Podría contener funciones utilitarias
 ├── data/             # Carpeta para almacenar el archivo de datos (dataFrame.csv o el descargado de la API)
 └── README.md         # Este archivo
+```
 
 ## Próximos Pasos
 
